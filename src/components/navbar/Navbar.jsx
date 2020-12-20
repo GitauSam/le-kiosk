@@ -22,11 +22,11 @@ const Navbar = ({ totalItems }) => {
                             className={classes.title}
                             color="inherit">
                             <img src={logo} 
-                            alt="Commerce.js" 
-                            height="50px"
-                            className={classes.image}
-                            component={Link}
-                            to="/"/>
+                                alt="Commerce.js" 
+                                height="75px"
+                                className={classes.image}
+                                component={Link}
+                                to="/"/>
                             My Shop
                         </Typography>
                         <div className={classes.grow}/>
