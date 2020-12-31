@@ -19,27 +19,43 @@ const AddressForm = ({ checkoutToken, next }) => {
 
     const fetchShippingCountries = async (checkoutTokenId)  => {
         const { countries } = await commerce.services.localeListShippingCountries(checkoutTokenId);
-        console.log(countries);
+        // console.log("Fetch Shipping Countries Activated");
+        // console.log(countries);
         setShippingCountries(countries);
         setShippingCountry(Object.keys(countries)[0]);
+        // console.log("countries after fetching");
+        // console.log(countries);
     }
 
     const fetchSubdivisions = async (countryCode) => {
+        console.log("Fetch Shipping Subdivisions Activated");
         const { subdivisions } = await commerce.services.localeListSubdivisions(countryCode);
         setShippingSubdivisions(subdivisions);
         setShippingSubdivision(Object.keys(subdivisions)[0]);
     }
 
     const fetchShippingOptions = async (checkoutTokenId, country, region = null) => {
-        console.log('Checkout Token: ' + checkoutTokenId);
-        console.log('Shipping Country: ' + country);
-        console.log('Shipping subdivision: ' + region);
+        // console.log("Fetch Shipping Options Activated");
+        // console.log('Checkout Token: ' + checkoutTokenId);
+        // console.log('Shipping Country: ' + country);
+        // console.log('Shipping subdivision: ' + region);
+        
+        if (country && region) {
+            const options = await commerce.checkout.getShippingOptions(checkoutTokenId, { country, region });
+            setShippingOptions(options);
+            setShippingOption(options[0].id);
 
-        const options = await commerce.checkout.getShippingOptions(checkoutTokenId, { country, region });
-        setShippingOptions(options);
-        setShippingOption(options[0].id);
-
-        console.log(shippingOptions);
+            // console.log(options);
+            // console.log(`options lenght: ${options.length}`);
+            // console.log(shippingOptions);
+            // console.log(`shippingOptions: ${shippingOptions.length}`);
+            // console.log("Shipping Option...")
+            // console.log(shippingOption);
+        } else {
+            console.log('Shipping Country may be empty: ' + country);
+            console.log('Shipping subdivision may be empty: ' + region);
+        }
+        
     }
 
     useEffect(() => {
@@ -51,7 +67,7 @@ const AddressForm = ({ checkoutToken, next }) => {
     }, [shippingCountry])
     
     useEffect(() => {
-        if (shippingOptions) fetchShippingOptions(checkoutToken.id, shippingCountry, shippingSubdivision);
+        if (shippingSubdivision && shippingCountry) fetchShippingOptions(checkoutToken.id, shippingCountry, shippingSubdivision);
     }, [shippingSubdivision])
 
     return (
@@ -66,7 +82,8 @@ const AddressForm = ({ checkoutToken, next }) => {
                                     .handleSubmit((
                                         data) => next({ ...data, 
                                                         shippingCountry,
-                                                        shippingSubdivision }))
+                                                        shippingSubdivision,
+                                                        shippingOption }))
                             }
                 >
                     <Grid container spacing={3}>

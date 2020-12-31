@@ -27,7 +27,7 @@ const Navbar = ({ totalItems }) => {
                                 className={classes.image}
                                 component={Link}
                                 to="/"/>
-                            My Shop
+                            le kiosk
                         </Typography>
                         <div className={classes.grow}/>
                         {

@@ -22,8 +22,14 @@ export default makeStyles((theme) => ({
   },
   cardDetails: {
     display: 'flex',
-    marginTop: '5%',
+    marginTop: '10%',
     width: '100%',
     justifyContent: 'space-between',
   },
+  subtotal: {
+    marginRight: '10px',
+    [theme.breakpoints.down('xs')]: {
+      fontVariant: 'h6',
+    },
+  }
 }));

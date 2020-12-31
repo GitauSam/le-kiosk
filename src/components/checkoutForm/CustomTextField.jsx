@@ -11,6 +11,7 @@ const FormInput = ({ name, label, required }) => {
                 as={TextField}
                 control={control}
                 fullWidth
+                defaultValue=""
                 name={name}
                 label={label}
                 required={required}

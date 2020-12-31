@@ -5,18 +5,18 @@ import { loadStripe } from "@stripe/stripe-js";
 
 import Review from './Review';
 
-const stripePromise = loadStripe('21646416');
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
-const PaymentForm = ({ checkoutToken, backStep }) => {
+const PaymentForm = ({ shippingData, checkoutToken, backStep, onCaptureCheckout, nextStep, timeout }) => {
 
-    const handleSubmit = (event, elements, stripe) => {
+    const handleSubmit = async (event, elements, stripe) => {
         event.preventDefault();
 
         if (!stripe || !elements) return;
 
         const cardElement = elements.getElement(CardElement);
 
-        const { error, paymentMethod } = await stripe.createPaymentMethod({ type: 'card', card: 'cardElement' });
+        const { error, paymentMethod } = await stripe.createPaymentMethod({ type: 'card', card: cardElement });
 
         if (error) {
             console.log(error);
@@ -29,21 +29,25 @@ const PaymentForm = ({ checkoutToken, backStep }) => {
                     email: shippingData.email
                 },
                 shipping: { 
-                    name: 'Primary', 
+                    name: 'Regional', 
                     street: shippingData.address1,
                     town_city: shippingData.city,
                     county_state: shippingData.shippingSubdivision,
                     postal_zip_code: shippingData.zip,
                     country: shippingData.shippingCountry,
                 },
-                fulfillment: { shipping_methods: shippingData.shippingOption },
+                fulfillment: { shipping_method: shippingData.shippingOption },
                 payment: {
                     gateway: 'stripe',
                     stripe: {
-                        payment_method_id: paymentMethod.id
-                    }
-                }
-            }
+                        payment_method_id: paymentMethod.id,
+                    },
+                },
+            };
+
+            onCaptureCheckout(checkoutToken.id, orderData);
+
+            nextStep();
         }
     }
 
@@ -56,7 +60,7 @@ const PaymentForm = ({ checkoutToken, backStep }) => {
                 gutterBottom
                 style={{ margin: '20px 0' }}
             >
-                Payment Methods
+                Payment Method
             </Typography>
             <Elements stripe={stripePromise}>
                 <ElementsConsumer>
@@ -97,4 +101,4 @@ const PaymentForm = ({ checkoutToken, backStep }) => {
     )
 }
 
-export default PaymentForm
+export default PaymentForm;
