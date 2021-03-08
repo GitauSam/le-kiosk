@@ -18,20 +18,13 @@ const AddressForm = ({ checkoutToken, next }) => {
     const methods = useForm();
 
     const fetchShippingCountries = async (checkoutTokenId)  => {
-        
-        console.log('checkoutTokenId sent:' + checkoutTokenId);
-
-        // const { countries } = await commerce.services.localeListShippingCountries(checkoutTokenId);
 
         commerce.services.localeListShippingCountries(checkoutTokenId).then((countries) => {
 
-            console.log('shippingCountries returned:');
-            console.log(countries);
             setShippingCountries(countries.countries)
             setShippingCountry(Object.keys(countries)[0]);
 
           }).catch((error) => {
-            console.log('There was an error fetching a list of shipping countries', error);
           });
 
     }
@@ -59,7 +52,7 @@ const AddressForm = ({ checkoutToken, next }) => {
     }
 
     useEffect(() => {
-        console.log('token id:' + checkoutToken.id);
+        
         fetchShippingCountries(checkoutToken.id);
 
     }, []);
