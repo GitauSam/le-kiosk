@@ -18,17 +18,23 @@ const Navbar = ({ totalItems }) => {
                 className={classes.appBar}
                 color="inherit">
                     <Toolbar>
-                        <Typography variant="h6"
-                            className={classes.title}
-                            color="inherit">
-                            <img src={logo} 
-                                alt="Commerce.js" 
-                                height="75px"
-                                className={classes.image}
-                                component={Link}
-                                to="/"/>
-                            le kiosk
-                        </Typography>
+                        <Link 
+                            to="/"
+                            style={{ textDecoration: 'none', }}
+                        >
+                            <Typography variant="h6"
+                                className={classes.title}
+                                color="inherit"
+                                style={{ color: '#000', }}    
+                            >
+                                        <img src={logo} 
+                                            alt="Commerce.js" 
+                                            height="75px"
+                                            className={classes.image}
+                                            />
+                                        le-kiosk
+                            </Typography>
+                        </Link>
                         <div className={classes.grow}/>
                         {
                             location.pathname === '/'&&(
