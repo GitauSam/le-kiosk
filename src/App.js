@@ -42,6 +42,7 @@ const App = () => {
         const { cart } = await commerce.cart.remove(productId);
 
         setCart(cart);
+        
     }
 
     const handleEmptyCart = async () => {
@@ -60,27 +61,27 @@ const App = () => {
 
     const handleCaptureCheckout = async (checkoutTokenId, newOrder) => {
 
-        console.log(checkoutTokenId);
-        console.log(newOrder);
-
         try {
+
             const incomingOrder = await commerce.checkout.capture(checkoutTokenId, newOrder);
 
             setOrder(incomingOrder);
             refreshCart();
+
         } catch (error) {
+
             console.log(error);
             setErrorMessage(error.data.error.message);
+
         }
     }
 
     useEffect(() => {
+
         fetchProducts();
         fetchCart();
+    
     }, []);
-
-    console.log("cart");
-    console.log(cart);
 
     return (
         <Router>

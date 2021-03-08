@@ -21,19 +21,21 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
 
     const [activeStep, setActiveStep] = useState(0);
     const [checkoutToken, setCheckoutToken] = useState(null);
-    const [isFinished, setIsFinished] = useState(false);
     const classes = useStyles();
     const [shippingData, setShippingData] = useState({});
     const history = useHistory();
 
     useEffect(() => {
+        console.log('here at generate token');
         const generateToken = async () => {
             try {
                 const token = await commerce.checkout.generateToken(cart.id, { type: 'cart' });
-
+                console.log(token);
                 setCheckoutToken(token);
+                console.log(checkoutToken);
             } catch (error) {
-                history.pushState('/');
+                console.log(error);
+                // history.pushState('/');
             }
         }
 
@@ -52,12 +54,6 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
         setShippingData(data);
 
         nextStep();
-    }
-
-    const timeout = () => {
-        setTimeout(() => {
-            setIsFinished(true);
-        }, 3000);
     }
 
     let Confirmation = () => order.customer ? (
@@ -111,7 +107,6 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
                 backStep={backStep}
                 onCaptureCheckout={onCaptureCheckout}
                 nextStep={nextStep}
-                timeout={timeout}
             />
 
     return (

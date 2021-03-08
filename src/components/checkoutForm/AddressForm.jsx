@@ -18,56 +18,62 @@ const AddressForm = ({ checkoutToken, next }) => {
     const methods = useForm();
 
     const fetchShippingCountries = async (checkoutTokenId)  => {
-        const { countries } = await commerce.services.localeListShippingCountries(checkoutTokenId);
-        // console.log("Fetch Shipping Countries Activated");
-        // console.log(countries);
-        setShippingCountries(countries);
-        setShippingCountry(Object.keys(countries)[0]);
-        // console.log("countries after fetching");
-        // console.log(countries);
+        
+        console.log('checkoutTokenId sent:' + checkoutTokenId);
+
+        // const { countries } = await commerce.services.localeListShippingCountries(checkoutTokenId);
+
+        commerce.services.localeListShippingCountries(checkoutTokenId).then((countries) => {
+
+            console.log('shippingCountries returned:');
+            console.log(countries);
+            setShippingCountries(countries.countries)
+            setShippingCountry(Object.keys(countries)[0]);
+
+          }).catch((error) => {
+            console.log('There was an error fetching a list of shipping countries', error);
+          });
+
     }
 
     const fetchSubdivisions = async (countryCode) => {
-        console.log("Fetch Shipping Subdivisions Activated");
+
         const { subdivisions } = await commerce.services.localeListSubdivisions(countryCode);
+
         setShippingSubdivisions(subdivisions);
         setShippingSubdivision(Object.keys(subdivisions)[0]);
+
     }
 
     const fetchShippingOptions = async (checkoutTokenId, country, region = null) => {
-        // console.log("Fetch Shipping Options Activated");
-        // console.log('Checkout Token: ' + checkoutTokenId);
-        // console.log('Shipping Country: ' + country);
-        // console.log('Shipping subdivision: ' + region);
-        
+
         if (country && region) {
+
             const options = await commerce.checkout.getShippingOptions(checkoutTokenId, { country, region });
+
             setShippingOptions(options);
             setShippingOption(options[0].id);
 
-            // console.log(options);
-            // console.log(`options lenght: ${options.length}`);
-            // console.log(shippingOptions);
-            // console.log(`shippingOptions: ${shippingOptions.length}`);
-            // console.log("Shipping Option...")
-            // console.log(shippingOption);
-        } else {
-            console.log('Shipping Country may be empty: ' + country);
-            console.log('Shipping subdivision may be empty: ' + region);
         }
         
     }
 
     useEffect(() => {
-        fetchShippingCountries(checkoutToken.id)
+        console.log('token id:' + checkoutToken.id);
+        fetchShippingCountries(checkoutToken.id);
+
     }, []);
 
     useEffect(() => {
+
         if (shippingCountry) fetchSubdivisions(shippingCountry);
+
     }, [shippingCountry])
     
     useEffect(() => {
+
         if (shippingSubdivision && shippingCountry) fetchShippingOptions(checkoutToken.id, shippingCountry, shippingSubdivision);
+        
     }, [shippingSubdivision])
 
     return (
